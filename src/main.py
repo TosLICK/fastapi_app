@@ -1,4 +1,4 @@
-from typing import Optional, Dict, List
+""" from typing import Optional, Dict, List
 
 from fastapi import FastAPI, Path, HTTPException
 from pydantic import BaseModel
@@ -9,13 +9,11 @@ app = FastAPI()
 class Sightseeing(BaseModel):
     name: str
     description: Optional[str] = None
-    is_visited: Optional[bool] = False
 
 
 class SightseeingUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
-    is_visited: Optional[bool] = None
 
 
 sightseeings: Dict[int, Sightseeing] = {}
@@ -62,4 +60,21 @@ async def delete_item(item_id: int) -> dict:
     if item_id not in sightseeings:
         raise_404_error()
     del sightseeings[item_id]
-    return {"message": f"Item {item_id} deleted"}
+    return {"message": f"Item {item_id} deleted"} """
+
+import uvicorn
+from fastapi import FastAPI
+
+from src.routes import sightseeings
+
+app = FastAPI()
+
+app.include_router(sightseeings.router, prefix='/api')
+
+
+# @app.get("/")
+# async def read_root() -> dict:
+#     return {"message": "Hello, World!"}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
