@@ -1,5 +1,5 @@
 from src.dependency_injection import di as di_module
-from src.configuration.config import AppConfig
+from src.configuration.config import ConfigData
 
 
 def test_get_configuration_singleton() -> None:
@@ -12,7 +12,7 @@ def test_get_engine_singleton() -> None:
     # ensure engine singleton behavior; reset global engine for test isolation
     prev = getattr(di_module, "engine", None)
     di_module.engine = None
-    class DummyConfig(AppConfig):
+    class DummyConfig(ConfigData):
         connection_string = "sqlite:///:memory:"
 
     try:

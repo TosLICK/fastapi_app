@@ -4,19 +4,20 @@ from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker, Session
 
 from src.repository.sightseeings_repository import SightseeingRepository
-from src.configuration.config import AppConfig
+from src.configuration.config import ConfigData, ConfigReader
 
-configuration: AppConfig | None = None
+config_data: ConfigData | None = None
 
-def get_configuration() -> AppConfig:  # Singleton pattern for global configuration
-    global configuration
-    if configuration is None:
-        configuration = AppConfig()
-    return configuration
+def get_configuration() -> ConfigData:  # Singleton pattern for global configuration
+    global config_data
+    if config_data is None:
+        config_reader = ConfigReader()
+        config_data = config_reader.read()
+    return config_data
 
 engine: Engine | None = None
 
-def get_engine(config: Annotated[AppConfig, Depends(get_configuration)]) -> Engine:  # Singleton pattern for global engine
+def get_engine(config: Annotated[ConfigData, Depends(get_configuration)]) -> Engine:  # Singleton pattern for global engine
     global engine
     if engine is None:
         engine = create_engine(config.connection_string, echo=True)
