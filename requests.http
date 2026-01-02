@@ -1,0 +1,57 @@
+### FastAPI Sightseeings API Requests
+
+@host = http://localhost:8000
+@api = /api/sightseeings
+
+### Get all sightseeings
+GET {{host}}{{api}}/
+Accept: application/json
+
+### Get all sightseeings with pagination
+GET {{host}}{{api}}/?skip=0&limit=10
+Accept: application/json
+
+### Get sightseeing by ID
+GET {{host}}{{api}}/1
+Accept: application/json
+
+### Create new sightseeing
+POST {{host}}{{api}}/
+Content-Type: application/json
+
+{
+  "name": "Eiffel Tower",
+  "location": "Paris, France",
+  "description": "Iconic iron lattice tower in Paris"
+}
+
+### Create another sightseeing
+POST {{host}}{{api}}/
+Content-Type: application/json
+
+{
+  "name": "Big Ben",
+  "location": "London, UK",
+  "description": "Famous clock tower"
+}
+
+### Update sightseeing
+PATCH {{host}}{{api}}/1
+Content-Type: application/json
+
+{
+  "description": "Updated description for the sightseeing"
+}
+
+### Update sightseeing name and location
+PATCH {{host}}{{api}}/1
+Content-Type: application/json
+
+{
+  "name": "Updated Name",
+  "location": "Updated Location"
+}
+
+### Delete sightseeing
+DELETE {{host}}{{api}}/1
+Accept: application/json

@@ -11,8 +11,7 @@ app = FastAPI()
 app.include_router(sightseeings_routes.router, prefix='/api')
 
 
+engine = get_engine(get_configuration())
+Base.metadata.create_all(bind=engine)
 if __name__ == "__main__":
-    # When running as a script we ensure DB is created using the configured engine.
-    engine = get_engine(get_configuration())
-    Base.metadata.create_all(bind=engine)
     uvicorn.run(app, host="0.0.0.0", port=8000)
