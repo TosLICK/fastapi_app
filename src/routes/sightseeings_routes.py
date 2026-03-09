@@ -2,9 +2,11 @@ from typing import List, Sequence
 
 from fastapi import APIRouter, Path, HTTPException, Depends, status, Query
 
+from src.database.models import User
 from src.dependency_injection.di import get_sightseeing_repository
 from src.schemas.schemas import SightseeingModel, SightseeingResponse, SightseeingUpdateModel
 from src.repository.sightseeings_repository import SightseeingRepository
+from src.services.auth import auth_service
 
 router = APIRouter(prefix='/sightseeings', tags=["sightseeings"])
 
@@ -16,7 +18,7 @@ def raise_404_error() -> None:
 def read_all_sightseeings(
     skip: int = Query(0, ge=0),
     limit: int = Query(10, ge=1, le=50),
-    db: SightseeingRepository = Depends(get_sightseeing_repository)
+    db: SightseeingRepository = Depends(get_sightseeing_repository),
 ) -> Sequence[SightseeingResponse]:
     sightseeings = db.get_all_sightseeings(skip, limit)
     return sightseeings
@@ -31,10 +33,11 @@ def read_sightseeing_by_id(
         raise_404_error()
     return sightseeing
 
-@router.post("/", response_model=SightseeingResponse, status_code=201)
+@router.post("/", response_model=SightseeingResponse, status_code=status.HTTP_201_CREATED)
 def create_sightseeing(
     body: SightseeingModel,
-    db: SightseeingRepository = Depends(get_sightseeing_repository)
+    db: SightseeingRepository = Depends(get_sightseeing_repository),
+    current_user: User = Depends(auth_service.get_current_user)
 ) -> SightseeingResponse:
     return db.create_sightseeing(body)
 
@@ -42,7 +45,8 @@ def create_sightseeing(
 def update_sightseeing(
     item_id: int,
     body: SightseeingUpdateModel,
-    db: SightseeingRepository = Depends(get_sightseeing_repository)
+    db: SightseeingRepository = Depends(get_sightseeing_repository),
+    current_user: User = Depends(auth_service.get_current_user)
 ) -> SightseeingResponse:
     sightseeing = db.update_sightseeing(item_id, body)
     if sightseeing is None:
@@ -50,7 +54,11 @@ def update_sightseeing(
     return sightseeing
 
 @router.delete("/{item_id}", response_model=SightseeingResponse)
-def delete_item(item_id: int, db: SightseeingRepository = Depends(get_sightseeing_repository)) -> SightseeingResponse:
+def delete_item(
+    item_id: int,
+    db: SightseeingRepository = Depends(get_sightseeing_repository),
+    current_user: User = Depends(auth_service.get_current_user)
+    ) -> SightseeingResponse:
     sightseeing = db.delete_sightseeing(item_id)
     if sightseeing is None:
         raise_404_error()

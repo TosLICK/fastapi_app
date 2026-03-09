@@ -208,3 +208,6 @@ __marimo__/
 
 # user specific files
 config.ini
+
+# migrations
+alembic.ini

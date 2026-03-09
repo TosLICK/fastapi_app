@@ -2,6 +2,28 @@
 
 @host = http://localhost:8000
 @api = /api/sightseeings
+@auth_api = /api/auth
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNzczMDUwNzI2LCJleHAiOjE3NzMwNTE2MjYsInNjb3BlIjoiYWNjZXNzX3Rva2VuIn0.8hUBo8j9SZhv_0fy59H6bUa4R4mOrQ59gPoTarKAUvM
+
+### Sign up
+POST {{host}}{{auth_api}}/signup
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### Login
+POST {{host}}{{auth_api}}/login
+Content-Type: application/x-www-form-urlencoded
+
+username=test@example.com&password=password123
+
+### Get current user
+GET {{host}}{{auth_api}}/me
+Authorization: Bearer {{token}}
 
 ### Get all sightseeings
 GET {{host}}{{api}}/
@@ -15,9 +37,10 @@ Accept: application/json
 GET {{host}}{{api}}/1
 Accept: application/json
 
-### Create new sightseeing
+### Create new sightseeing (requires auth)
 POST {{host}}{{api}}/
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "name": "Eiffel Tower",
@@ -25,9 +48,10 @@ Content-Type: application/json
   "description": "Iconic iron lattice tower in Paris"
 }
 
-### Create another sightseeing
+### Create another sightseeing (requires auth)
 POST {{host}}{{api}}/
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "name": "Big Ben",
@@ -35,23 +59,25 @@ Content-Type: application/json
   "description": "Famous clock tower"
 }
 
-### Update sightseeing
-PATCH {{host}}{{api}}/1
+### Update sightseeing (requires auth)
+PATCH {{host}}{{api}}/2
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "description": "Updated description for the sightseeing"
 }
 
-### Update sightseeing name and location
-PATCH {{host}}{{api}}/1
+### Update sightseeing name and location (requires auth)
+PATCH {{host}}{{api}}/2
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "name": "Updated Name",
   "location": "Updated Location"
 }
 
-### Delete sightseeing
-DELETE {{host}}{{api}}/1
-Accept: application/json
+### Delete sightseeing (requires auth)
+DELETE {{host}}{{api}}/2
+Authorization: Bearer {{token}}

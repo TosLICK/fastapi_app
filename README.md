@@ -16,6 +16,7 @@ Lightweight FastAPI service for managing sightseeing records (CRUD). Uses SQLAlc
 Prerequisites
 - Python (recommend 3.11+)
 - Virtual environment tool (venv, pipenv, or poetry)
+- PostgreSQL database server running
 - Install project dependencies (example using pip):
 
 ```bash
@@ -28,15 +29,19 @@ Note: Project has pyproject.toml; adapt to your preferred workflow (pip/poetry).
 
 Configuration
 - Config files are stored in `environments/`
-- Default DB URL is in `environments/config.ini` (sqlite by default)
+- Database URL is configured in `environments/config.ini`
 - App reads environment via `src.configuration.config.AppConfig`
 
 Database & migrations
-- To create DB schema from models (for development):
-  - Run the app once (it creates DB when started) or:
-  - Use Alembic:
-    - Configure `alembic.ini` or ensure `environments/config.ini` contains the DB URL
-    - Run: `alembic upgrade head`
+- Create a PostgreSQL database named `sightseeings`:
+  ```bash
+  createdb sightseeings
+  ```
+- Configure the database connection in `environments/config.ini` (ensure the DB URL points to your PostgreSQL instance)
+- Run Alembic migrations to set up the schema:
+  ```bash
+  alembic upgrade head
+  ```
 
 Run the app
 - From project root:
@@ -62,7 +67,7 @@ curl -X POST "http://127.0.0.1:8000/api/sightseeings/" \
 ```
 
 Testing
-- Tests live in `tests/` and use an in-memory SQLite DB.
+- Tests live in `tests/` and use an in-memory SQLite DB for isolation.
 - Run tests:
 ```bash
 pytest -q

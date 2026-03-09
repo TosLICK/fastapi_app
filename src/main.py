@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 
-from src.routes import sightseeings_routes
+from src.routes import sightseeings_routes, auth
 from src.database.models import Base
 from src.dependency_injection.di import get_configuration, get_engine
 
@@ -9,6 +9,7 @@ from src.dependency_injection.di import get_configuration, get_engine
 app = FastAPI()
 
 app.include_router(sightseeings_routes.router, prefix='/api')
+app.include_router(auth.router, prefix='/api')
 
 
 engine = get_engine(get_configuration())
